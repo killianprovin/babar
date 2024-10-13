@@ -26,6 +26,9 @@ app.use(auth(config));
 const db = require('./models');
 
 // Routers (ajoutez une protection si nécessaire sur certaines routes)
+const categoryRouter = require('./routes/Categories');
+app.use('/categories', categoryRouter);
+
 const customerRouter = require('./routes/Customers');
 app.use('/customers', customerRouter);
 
