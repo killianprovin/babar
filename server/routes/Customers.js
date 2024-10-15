@@ -57,7 +57,7 @@ router.get('/byId/:id', async (req, res) => {
         status: customer.status,
         amount_invested: deposits.reduce((acc, deposit) => acc + deposit.amount, 0),
         allowed_overdraft: (deposits.reduce((acc, deposit) => acc + deposit.amount, 0) > 1000 ? -80 : (customer.barman ? -20 : 0)),
-        balance: deposits.reduce((acc, deposit) => acc + deposit.amount, 0) - fullpurchases.reduce((acc, purchase) => acc + purchase.price * purchase.quantity, 0),
+        balance: deposits.reduce((acc, deposit) => acc + deposit.amount, 0) - fullpurchases.reduce((acc, purchase) => acc + purchase.price, 0),
         createdAt: customer.createdAt,
         updatedAt: customer.updatedAt,
 
