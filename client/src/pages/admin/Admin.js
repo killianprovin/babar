@@ -8,6 +8,7 @@ import Items from './Items'
 import Prices from './Prices'
 import Deposits from './Deposits'
 import Purchases from './Purchases'
+import Categories from './Categories';
 
 function Admin() {
   return (
@@ -17,6 +18,7 @@ function Admin() {
         <div>
             <Routes>
                 <Route path="customers" element={<Customers />} />
+                <Route path="categories" element={<Categories />} />
                 <Route path="items" element={<Items />} />
                 <Route path="prices" element={<Prices />} />
                 <Route path="deposits" element={<Deposits />} />

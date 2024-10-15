@@ -19,5 +19,11 @@ router.post('/', async (req, res) => {
     res.json(purchase);
 });
 
+router.get('/delete/:id', async (req, res) => {
+    const id = req.params.id;
+    await Purchases.destroy({where: {id: id}});
+    res.json(id);
+});
+
 
 module.exports = router;

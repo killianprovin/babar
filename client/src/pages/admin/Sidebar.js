@@ -7,6 +7,7 @@ function Sidebar() {
         <div className="sidebar">
             <ul>
                 <li><Link to="/admin/customers">Customers</Link></li>
+                <li><Link to="/admin/categories">Categories</Link></li>
                 <li><Link to="/admin/items">Items</Link></li>
                 <li><Link to="/admin/prices">Prices</Link></li>
                 <li><Link to="/admin/deposits">Deposits</Link></li>
