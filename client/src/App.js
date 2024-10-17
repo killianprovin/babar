@@ -6,20 +6,13 @@ import Customer from './pages/Customer';
 import Items from './pages/Items';
 import Admin from './pages/admin/Admin';
 
+
+import Navbar from './component/Navbar';
+
 function App() {
   return (
-
     <Router >
-        <header>
-          <div className='nav'>
-            <img src='/babar-transparent.png' alt='logo' />
-            <Link to="/">Home</Link>
-            <Link to="/customers">Customers</Link>
-            <Link to="/items">Items</Link>
-            <Link to="/admin">Admin</Link>
-          </div>
-        </header>
-        <h1>Bar</h1>
+        <Navbar />
         <div>
             <Routes>
                 <Route path="/" element={<Home />} />

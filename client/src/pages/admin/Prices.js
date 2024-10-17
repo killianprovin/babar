@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { TextField, Button, Box, Typography, Container, Grid, Autocomplete } from '@mui/material';
 
 function Prices() {
   const [prices, setPrices] = useState([]);
@@ -71,52 +72,81 @@ function Prices() {
     );
   });
 
+  const handleItemSelect = (event, value) => {
+    setSelectedItem(value);
+  };
+
   return (
-    <div>
-      <h1>Prices</h1>
+    <Container>
+      {/* Formulaire pour créer un prix */}
+      <Box sx={{ mb: 4 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            {/* Autocomplete pour sélectionner un article */}
+            <Autocomplete
+              disablePortal
+              options={items.map(item => item.name)}
+              sx={{ width: '100%' }}
+              renderInput={(params) => <TextField {...params} label="Select Item" />}
+              onChange={handleItemSelect}  // Gère la sélection de l'item
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField 
+              type="number"
+              label="Enter Price"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              fullWidth 
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button 
+              variant="contained" 
+              color="primary" 
+              onClick={createPrice}
+              fullWidth
+              size="small"  // Bouton de petite taille
+            >
+              Set Price
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
 
-      <div>
-        {/* Liste déroulante des articles */}
-        <select value={selectedItem} onChange={(e) => setSelectedItem(e.target.value)}>
-          <option value="">Select an item</option>
-          {items.map((item, key) => (
-            <option key={key} value={item.name}>
-              {item.name}
-            </option>
-          ))}
-        </select>
-
-        <input
-          type="number"
-          placeholder="Enter price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-
-        <button onClick={createPrice}>Set Price</button>
-      </div>
-
-      <div>
-        <input
-          type="text"
-          placeholder="Search by item name or price"
+      {/* Champ de recherche */}
+      <Box sx={{ mb: 4 }}>
+        <TextField
+          label="Search by item name or price"
+          variant="outlined"
+          fullWidth
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-      </div>
-
-      <h2>Existing Prices</h2>
+      </Box>
+      
       {/* Affichage des prix filtrés */}
       {filteredPrices.map((priceObj, key) => {
         const item = items.find(item => item.id === priceObj.id_item);
         return (
-          <div key={key}>
-            {item ? item.name : 'Unknown Item'}: {priceObj.price}€
-            <button onClick={() => deletePrice(priceObj.id)}>Delete</button>
-          </div>
+          <Box key={key} sx={{ mb: 2, p: 2, border: '1px solid #ccc', borderRadius: '8px' }}>
+            <Typography variant="body1">
+              {item ? item.name : 'Unknown Item'}: {priceObj.price}€
+            </Typography>
+            <Button 
+              variant="outlined" 
+              color="error"  // Couleur rouge pour le bouton de suppression
+              onClick={() => deletePrice(priceObj.id)}
+              size="small"  // Bouton de petite taille
+              sx={{ mt: 1 }}
+            >
+              Delete
+            </Button>
+          </Box>
         );
       })}
-    </div>
+    </Container>
   );
 }
 

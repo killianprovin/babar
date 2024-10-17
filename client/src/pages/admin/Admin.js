@@ -1,23 +1,24 @@
-import React from 'react'
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import Sidebar from './Sidebar'
-
-import Customers from './Customers'
-import Items from './Items'
-import Prices from './Prices'
-import Deposits from './Deposits'
-import Purchases from './Purchases'
+import Customers from './Customers';
+import Items from './Items';
+import Prices from './Prices';
+import Deposits from './Deposits';
+import Purchases from './Purchases';
 import Categories from './Categories';
+import './Admin.css'; // Assurez-vous que ce fichier est bien importé
+
+import Navbar from './Navbar';
 
 function Admin() {
   return (
-    <div>
-        <Sidebar />
-        <h1>Admin</h1>
-        <div>
+    <div className="admin-container">
+        <Navbar />
+        
+        <div className="content">
             <Routes>
-                <Route path="customers" element={<Customers />} />
+                <Route path="" element={<Customers />} />
                 <Route path="categories" element={<Categories />} />
                 <Route path="items" element={<Items />} />
                 <Route path="prices" element={<Prices />} />
@@ -26,7 +27,7 @@ function Admin() {
             </Routes>
         </div>
     </div>
-  )
+  );
 }
 
-export default Admin
+export default Admin;

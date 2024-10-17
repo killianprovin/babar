@@ -1,30 +1,32 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { TextField, Button, Box, Typography, Container, Grid } from '@mui/material';
 
 function Categories() {
     const [categories, setCategories] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
-
+    // Fonction pour récupérer les catégories
     const fetchCategories = () => {
         axios.get('http://localhost:3001/categories').then(response => {
             setCategories(response.data);
         });
     };
-    
+
     useEffect(() => {
         fetchCategories();
     }, []);
 
+    // Fonction pour supprimer une catégorie
     const deleteCategorie = (id) => {
         axios.get(`http://localhost:3001/categories/delete/${id}`).then(() => {
             fetchCategories();
         });
     }
 
+    // Fonction pour créer une nouvelle catégorie
     const createCategorie = () => {
-        let name = document.querySelector('input[placeholder="name"]').value;
+        let name = document.querySelector('input[name="name"]').value;
 
         axios.post('http://localhost:3001/categories', {
             name: name,
@@ -45,36 +47,67 @@ function Categories() {
     });
 
     return (
-        <div>
-            <h1>Categories</h1>
+        <Container>
+            {/* Formulaire pour créer une nouvelle catégorie */}
+            <Box sx={{ mb: 4 }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={9}>
+                        <TextField 
+                            name="name" 
+                            label="Category Name" 
+                            fullWidth 
+                            variant="outlined" 
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                        <Button 
+                            variant="contained" 
+                            color="primary" 
+                            onClick={createCategorie}
+                            fullWidth
+                        >
+                            Create Category
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Box>
 
-            <div>
-                <input type="text" placeholder="name" />
-
-                <button onClick={createCategorie}>Create</button>
-            </div>
-
-            <div>
-                <input
-                    type="text"
-                    placeholder="Search by name"
+            {/* Champ de recherche */}
+            <Box sx={{ mb: 4 }}>
+                <TextField
+                    label="Search by name"
+                    variant="outlined"
+                    fullWidth
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-            </div>
+            </Box>
 
-            {filteredCategories.map((value, key) => { 
-                return (
-                    <div key={key}> 
-                        <div>
-                            { value.name }
-                            <button onClick={() => deleteCategorie(value.id)}>Delete</button>
-                        </div>
-                    </div>
-                );
-            })}
-        </div>
-    )
+            {/* Liste des catégories */}
+            {filteredCategories.length > 0 ? (
+                filteredCategories.map((value, key) => (
+                    <Box 
+                        key={key} 
+                        sx={{ mb: 2, p: 2, border: '1px solid #ccc', borderRadius: '8px' }}
+                    >
+                        <Typography variant="body1">
+                            {value.name}
+                        </Typography>
+                        <Button 
+                            variant="outlined" 
+                            color="error"  // Couleur rouge pour le bouton de suppression
+                            onClick={() => deleteCategorie(value.id)}
+                            sx={{ mt: 1 }}
+                        >
+                            Delete
+                        </Button>
+                    </Box>
+                ))
+            ) : (
+                <Typography>No categories found</Typography>
+            )}
+        </Container>
+    );
 }
 
-export default Categories
+export default Categories;

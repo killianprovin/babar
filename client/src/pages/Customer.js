@@ -1,108 +1,125 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-
+import { Box, Typography, Card, CardContent, Grid, List, ListItem, ListItemText } from '@mui/material';
 
 function Customer() {
     let { id } = useParams();
-
-    const [customer, setCustomer] = useState([]);
+    const [customer, setCustomer] = useState({});
 
     useEffect(() => {
       axios.get(`http://localhost:3001/customers/byId/${id}`).then(response => {
         setCustomer(response.data);
-    });
-    }, []);
-  
+      });
+    }, [id]);
+
     return (
-        <div className='list-block'>
-            <div className='block'>
-                <div className='Infos'>
-                    <h1>Infos</h1>
-                    <div className='info-card'>
-                        <div className='info-item'>
-                            <span className='info-label'><b>Nom : </b></span>
-                            <span className='info-value'>{ customer.firstname }</span>
-                        </div>
-                        <div className='info-item'>
-                            <span className='info-label'><b>Prénom : </b></span>
-                            <span className='info-value'>{ customer.lastname }</span>
-                        </div>
-                        <div className='info-item'>
-                            <span className='info-label'><b>Surnom : </b></span>
-                            <span className='info-value'>{ customer.nickname }</span>
-                        </div>
-                        <div className='info-item'>
-                            <span className='info-label'><b>Promo : </b></span>
-                            <span className='info-value'>{ customer.year }</span>
-                        </div>
-                        <div className='info-item'>
-                            <span className='info-label'><b>Status : </b></span>
-                            <span className='info-value'>{ customer.status }</span>
-                        </div>
-                        <div className='info-item'>
-                            <span className='info-label'><b>Montant investi : </b></span>
-                            <span className='info-value'>{ customer.amount_invested }€</span>
-                        </div>
-                        <div className='info-item'>
-                            <span className='info-label'><b>Découvert autorisé : </b></span>
-                            <span className='info-value'>{ customer.allowed_overdraft }€</span>
-                        </div>
-                        <div className='info-item'>
-                            <span className='info-label'><b>Solde : </b></span>
-                            <span className='info-value'>{ customer.balance }€</span>
-                        </div>
-                    </div>
-                </div>
+      <Box sx={{ p: 4 }}>
+        <Grid container spacing={4}>
+          {/* Informations principales */}
+          <Grid item xs={12} md={6}>
+            <Card>
+              <CardContent>
+                <Typography variant="h4" gutterBottom>
+                  Infos
+                </Typography>
+                <List>
+                  <ListItem>
+                    <ListItemText primary="Nom" secondary={customer.firstname || '-'} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Prénom" secondary={customer.lastname || '-'} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Surnom" secondary={customer.nickname || '-'} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Promo" secondary={customer.year || '-'} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Status" secondary={customer.status || '-'} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Montant investi" secondary={`${customer.amount_invested || 0} €`} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Découvert autorisé" secondary={`${customer.allowed_overdraft || 0} €`} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Solde" secondary={`${customer.balance || 0} €`} />
+                  </ListItem>
+                </List>
+              </CardContent>
+            </Card>
+          </Grid>
 
-
-                <div className='Deposits'>
-                    <h1>Dépôts</h1>
-                    <ul>
-                        {customer.deposits && customer.deposits.map((deposit, key) => {
-                            return (
-                                <li className='deposit-item' key={key}>
-                                    <span className='price'>{deposit.amount}€</span>
-                                    <span className='date-deposit'>{new Date(deposit.createdAt).toLocaleString('fr-FR', {
-                                        year: 'numeric',
-                                        month: 'short',
-                                        day: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit'
-                                    })}</span>
-                                </li>
-                            );
+          {/* Achats (inversé avec Dépôts) */}
+          <Grid item xs={12} md={6}>
+            <Card>
+              <CardContent>
+                <Typography variant="h4" gutterBottom>
+                  Achats
+                </Typography>
+                <List>
+                  {customer.purchases && customer.purchases.map((purchase, key) => (
+                    <ListItem key={key}>
+                      <ListItemText
+                        primary={`${purchase.price} €`}
+                        secondary={`${purchase.quantity} x ${purchase.item}`}
+                        tertiary={new Date(purchase.createdAt).toLocaleString('fr-FR', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
                         })}
-                    </ul>
-                </div>
-            </div>
+                      />
+                    </ListItem>
+                  ))}
+                  {(!customer.purchases || customer.purchases.length === 0) && (
+                    <Typography variant="body2" color="textSecondary">
+                      Aucun achat trouvé.
+                    </Typography>
+                  )}
+                </List>
+              </CardContent>
+            </Card>
+          </Grid>
 
-            <div className='block'>
-                <div className='Purchases'>
-                    <h1>Achats</h1>
-                    <ul>
-                        {customer.purchases && customer.purchases.map((purchase, key) => {
-                            return (
-                                <li className='purchase-item' key={key}>
-                                    <span className='price'>{purchase.price}€ </span>
-                                    <span className='details'>{purchase.quantity} {purchase.item}</span>
-                                    <span className='date-purchase'>{new Date(purchase.createdAt).toLocaleString('fr-FR', {
-                                        year: 'numeric',
-                                        month: 'short',
-                                        day: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit'
-                                    })}</span>
-                                </li>
-                            );
+          {/* Dépôts (inversé avec Achats) */}
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h4" gutterBottom>
+                  Dépôts
+                </Typography>
+                <List>
+                  {customer.deposits && customer.deposits.map((deposit, key) => (
+                    <ListItem key={key}>
+                      <ListItemText
+                        primary={`${deposit.amount} €`}
+                        secondary={new Date(deposit.createdAt).toLocaleString('fr-FR', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
                         })}
-                    </ul>
-                </div>
-            </div>
-        </div>
-    )
-  }
+                      />
+                    </ListItem>
+                  ))}
+                  {(!customer.deposits || customer.deposits.length === 0) && (
+                    <Typography variant="body2" color="textSecondary">
+                      Aucun dépôt trouvé.
+                    </Typography>
+                  )}
+                </List>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
+    );
+}
 
-export default Customer
+export default Customer;

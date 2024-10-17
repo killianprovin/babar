@@ -1,0 +1,13 @@
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .content {
+    margin-top: 40px; /* Ajoute de l'espace entre la barre de navigation et le contenu */
+    width: 100%;
+    max-width: 1200px; /* Optionnel : Limiter la largeur du contenu */
+    padding: 20px; /* Optionnel : Ajouter du padding autour du contenu */
+  }
+  
